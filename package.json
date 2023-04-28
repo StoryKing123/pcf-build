@@ -1,0 +1,45 @@
+{
+  "name": "pcf-build",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "pcf-build": "./dist/index.cjs"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "cross-env NODE_ENV=production rollup -c",
+    "dev": "cross-env NODE_ENV=development rollup -c --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/shelljs": "^0.8.12",
+    "commander": "^10.0.1",
+    "cross-spawn": "^7.0.3",
+    "fs-extra": "^11.1.1",
+    "shelljs": "^0.8.5",
+    "xml2js": "^0.5.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@rollup/plugin-alias": "^4.0.2",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^23.0.2",
+    "@rollup/plugin-json": "^5.0.1",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@types/cross-spawn": "^6.0.2",
+    "@types/fs-extra": "^11.0.1",
+    "@types/node": "^18.16.1",
+    "@types/xml2js": "^0.4.11",
+    "babel-preset-env": "^1.7.0",
+    "cross-env": "^7.0.3",
+    "rollup": "^3.21.0",
+    "rollup-plugin-dts": "^5.3.0",
+    "rollup-plugin-hashbang": "^3.0.0",
+    "rollup-plugin-typescript2": "^0.34.1",
+    "tslib": "^2.5.0"
+  }
+}
