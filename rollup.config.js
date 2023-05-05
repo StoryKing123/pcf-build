@@ -41,10 +41,10 @@ export default [
     ...entries.map((input) => ({
         input,
         output: [
-            {
-                file: input.replace('src/', 'dist/').replace('.ts', '.mjs'),
-                format: 'esm'
-            },
+            // {
+            //     file: input.replace('src/', 'dist/').replace('.ts', '.mjs'),
+            //     format: 'esm'
+            // },
             {
                 file: input.replace('src/', 'dist/').replace('.ts', '.cjs'),
                 format: 'cjs'

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "bin": {
-    "pcf-build": "./dist/index.cjs"
+    "pcf-build": "./dist/index.cjs",
+    "p11": "./dist/index.cjs"
   },
   "type": "module",
   "scripts": {
