@@ -42,7 +42,7 @@ const initSolution = (prefix: string, name: string) => {
 
 program
   .command("build")
-  .version("0.0.1")
+  .version("0.0.2")
   .option("-o, --output <output>", "output dir")
   .action(async (option) => {
     // console.log(option);
@@ -76,13 +76,18 @@ program
     type ProjectReference = { $: { Include: string } };
     // console.log(projectReference);
     const projectsPath = projectReference.ProjectReference.map((reference) => {
-      return path.dirname(path.resolve(reference["$"].Include));
+      // console.log(solutionPath)
+      // console.log(reference["$"].Include)
+      // console.log(path.join(solutionPath,reference["$"].Include))
+      return path.dirname(path.resolve(reference["$"].Include.replace(/\\/g, path.sep)
+        .replace(/\//g, path.sep),));
     });
     console.log(projectsPath);
 
-    console.log("start run build");
+    // console.log("start run build");
     projects = await Promise.all(await runBuild(projectsPath));
 
+    console.log('run build completed')
     console.log(projects);
 
     const solutionContent = readFileSync(solutionXMLPath, {
@@ -127,10 +132,12 @@ function clearDist(solutionPath: string, outputDir: string) {
 }
 
 function compress(solutionPath: string, outputDir: string) {
+  // const outputPath = path.resolve(solutionPath, outputDir)
   const compressor = archive.create("zip", {});
+
   compressor.directory(path.resolve(solutionPath, outputDir), false);
   const output = createWriteStream(
-    path.resolve(solutionPath, outputDir, "Solution.zip")
+    path.resolve(solutionPath, "Solution.zip")
   );
   compressor.pipe(output);
   compressor.finalize();
@@ -255,12 +262,6 @@ async function appendCustomization(
   });
   const modifiedCustomizationsXmlString = build.buildObject(customizationsXML);
   writeFileSync(customizationsXMLPath, modifiedCustomizationsXmlString);
-  // writeFileSync(
-  //   path.resolve(solutionPath, "./package/customizations.xml"),
-  //   modifiedCustomizationsXmlString,
-  //   { flag: "w" }
-  // );
-  // rename(cost)
 }
 
 function copyPackage(solutionPath: string, outputDir: string) {
@@ -301,6 +302,7 @@ function copyProjects(
 
 async function runBuild(projectsPath: string[]) {
   console.log("start run build");
+  console.log(projectsPath)
 
   const outputPaths = projectsPath.map(async (projectPath) => {
     const outputPath = path.join(projectPath, "./out/controls");
