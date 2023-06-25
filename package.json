@@ -1,17 +1,17 @@
 {
   "name": "pcf-build",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a tool to build pcf",
   "main": "index.js",
   "bin": {
     "pcf-build": "./dist/index.cjs"
   },
-  
   "type": "module",
   "scripts": {
     "build": "cross-env NODE_ENV=production rollup -c",
     "dev": "cross-env NODE_ENV=development rollup -c --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "script-test": "pcf-build"
   },
   "keywords": [
     "pcf",
@@ -24,6 +24,7 @@
     "commander": "^10.0.1",
     "cross-spawn": "^7.0.3",
     "fs-extra": "^11.1.1",
+    "pcf-build": "^1.0.0",
     "shelljs": "^0.8.5",
     "xml2js": "^0.5.0"
   },
