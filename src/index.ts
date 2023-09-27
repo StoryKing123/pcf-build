@@ -42,7 +42,7 @@ const initSolution = (prefix: string, name: string) => {
 
 program
   .command("build")
-  .version("0.0.1")
+  .version("0.0.2")
   .option("-o, --output <output>", "output dir")
   .action(async (option) => {
     // console.log(option);
@@ -306,8 +306,8 @@ async function runBuild(projectsPath: string[]) {
     const outputPath = path.join(projectPath, "./out/controls");
     ensureDirSync(outputPath);
     const buildRes = shell.exec(
-      `npm run build -- --noColor --buildMode development --outDir "${outputPath}
-      " --buildSource MSBuild`,
+      // `npm run build -- --noColor --buildMode development --outDir "${outputPath}
+      `npm run build -- --noColor --buildMode development --buildSource MSBuild`,
       { cwd: projectPath }
     );
     const project = readdirSync(outputPath);
