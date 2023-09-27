@@ -42,11 +42,13 @@ const initSolution = (prefix: string, name: string) => {
 
 program
   .command("build")
-  .version("0.0.2")
+  .version("1.0.4")
   .option("-o, --output <output>", "output dir")
+  .option("-f, --file <filename>", "file name")
   .action(async (option) => {
     // console.log(option);
     const outputDir = option?.output ?? "package";
+    const fileName = option?.file ?? "Solution.zip";
     let projects: Project[] = [];
     const solutionPath = process.cwd();
     const currentFolder = path.basename(process.cwd());
@@ -119,18 +121,18 @@ program
       solutionPath,
       outputDir
     );
-    compress(solutionPath, outputDir);
+    compress(solutionPath, outputDir, fileName);
   });
 
 function clearDist(solutionPath: string, outputDir: string) {
   emptyDirSync(path.resolve(solutionPath, outputDir));
 }
 
-function compress(solutionPath: string, outputDir: string) {
+function compress(solutionPath: string, outputDir: string, fileName: string) {
   const compressor = archive.create("zip", {});
   compressor.directory(path.resolve(solutionPath, outputDir), false);
   const output = createWriteStream(
-    path.resolve(solutionPath, outputDir, "Solution.zip")
+    path.resolve(solutionPath, `${fileName}.zip`)
   );
   compressor.pipe(output);
   compressor.finalize();
@@ -255,12 +257,6 @@ async function appendCustomization(
   });
   const modifiedCustomizationsXmlString = build.buildObject(customizationsXML);
   writeFileSync(customizationsXMLPath, modifiedCustomizationsXmlString);
-  // writeFileSync(
-  //   path.resolve(solutionPath, "./package/customizations.xml"),
-  //   modifiedCustomizationsXmlString,
-  //   { flag: "w" }
-  // );
-  // rename(cost)
 }
 
 function copyPackage(solutionPath: string, outputDir: string) {
@@ -300,10 +296,22 @@ function copyProjects(
 }
 
 async function runBuild(projectsPath: string[]) {
-  console.log("start run build");
+  console.log(`${projectsPath} start run build`);
 
   const outputPaths = projectsPath.map(async (projectPath) => {
-    const outputPath = path.join(projectPath, "./out/controls");
+    //get pcf config file pcfconfig.json
+    const PCFConfig = require(path.join(projectPath, "pcfconfig.json"));
+    if (!PCFConfig || !PCFConfig.outDir) {
+      console.error(
+        "Please make sure you have set outDir in pcfconfig.json file"
+      );
+      throw new Error(
+        "Please make sure you have set outDir in pcfconfig.json file"
+      );
+    }
+    const outDir = PCFConfig.outDir;
+
+    const outputPath = path.join(projectPath, outDir);
     ensureDirSync(outputPath);
     const buildRes = shell.exec(
       // `npm run build -- --noColor --buildMode development --outDir "${outputPath}
