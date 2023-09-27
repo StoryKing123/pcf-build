@@ -1,12 +1,12 @@
 {
   "name": "pcf-build",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "a tool to build pcf",
   "main": "index.js",
+  "repository": "https://github.com/StoryKing123/pcf-build",
   "bin": {
     "pcf-build": "./dist/index.cjs"
   },
-  
   "type": "module",
   "scripts": {
     "build": "cross-env NODE_ENV=production rollup -c",
