@@ -78,13 +78,18 @@ program
     type ProjectReference = { $: { Include: string } };
     // console.log(projectReference);
     const projectsPath = projectReference.ProjectReference.map((reference) => {
-      return path.dirname(path.resolve(reference["$"].Include));
+      // console.log(solutionPath)
+      // console.log(reference["$"].Include)
+      // console.log(path.join(solutionPath,reference["$"].Include))
+      return path.dirname(path.resolve(reference["$"].Include.replace(/\\/g, path.sep)
+        .replace(/\//g, path.sep),));
     });
     console.log(projectsPath);
 
-    console.log("start run build");
+    // console.log("start run build");
     projects = await Promise.all(await runBuild(projectsPath));
 
+    console.log('run build completed')
     console.log(projects);
 
     const solutionContent = readFileSync(solutionXMLPath, {
@@ -130,6 +135,7 @@ function clearDist(solutionPath: string, outputDir: string) {
 
 function compress(solutionPath: string, outputDir: string, fileName: string) {
   const compressor = archive.create("zip", {});
+
   compressor.directory(path.resolve(solutionPath, outputDir), false);
   const output = createWriteStream(
     path.resolve(solutionPath, `${fileName}.zip`)
