@@ -42,7 +42,7 @@ const initSolution = (prefix: string, name: string) => {
 
 program
   .command("build")
-  .version("1.0.4")
+  .version("1.0.6")
   .option("-o, --output <output>", "output dir")
   .option("-f, --file <filename>", "file name")
   .action(async (option) => {
@@ -76,16 +76,22 @@ program
     type ItemGroup = { ProjectReference: ProjectReference[] };
 
     type ProjectReference = { $: { Include: string } };
-    // console.log(projectReference);
     const projectsPath = projectReference.ProjectReference.map((reference) => {
-      // console.log(solutionPath)
       // console.log(reference["$"].Include)
+      // console.log(path.dirname(path.resolve(reference["$"].Include)))
       // console.log(path.join(solutionPath,reference["$"].Include))
-      return path.dirname(path.resolve(reference["$"].Include.replace(/\\/g, path.sep)
-        .replace(/\//g, path.sep),));
+      let projectRelativePath = reference["$"].Include
+
+      if (process.platform !== 'win32') {
+        projectRelativePath = projectRelativePath.replaceAll('\\', '/')
+      }
+      // console.log('------')
+      // console.log(projectRelativePath)
+      return path.dirname(path.join(solutionPath, projectRelativePath))
     });
     console.log(projectsPath);
 
+    // return
     // console.log("start run build");
     projects = await Promise.all(await runBuild(projectsPath));
 
